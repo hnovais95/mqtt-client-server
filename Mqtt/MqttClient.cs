@@ -85,6 +85,10 @@ namespace Mqtt
                 {
                     Console.WriteLine($"Tópico {topic} assinado com sucesso.");
                 }
+                else
+                {
+                    Console.WriteLine($"Erro subscrever tópico {topic}.");
+                }
             }
             catch (Exception exc)
             {
@@ -114,6 +118,10 @@ namespace Mqtt
                 if (task.ReasonCode == MqttClientPublishReasonCode.Success)
                 {
                     Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {topic}; Payload: {jsonString}.");
+                } 
+                else
+                {
+                    Console.WriteLine($"Erro publicar mensagem. Tópico: {topic}; Payload: {jsonString}.");
                 }
             }
             catch (Exception exc)
