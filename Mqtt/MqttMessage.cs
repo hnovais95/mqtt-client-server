@@ -6,13 +6,11 @@ namespace Mqtt
     {
         public string Topic { get; set; }
         public Dictionary<string, object>? Payload { get; set; }
-        public string ClientId { get; set; }
 
-        public MqttMessage(string topic, Dictionary<string, object>? payload, string clientId = "")
+        public MqttMessage(string topic, Dictionary<string, object>? payload)
         {
             Topic = topic;
             Payload = payload;
-            ClientId = clientId;
         }
     }
 }

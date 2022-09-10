@@ -15,8 +15,12 @@ namespace Mqtt
     {
         private IMqttClient _client;
         private IMqttClientOptions _options;
+
+        public bool IsConnected => _client.IsConnected;
+
         public event ReceiveMessageDelegate OnReceiveMessage;
-        public event ConnectDelegate OnConnect;
+        public event Action OnConnect;
+        public event Action OnDisconnect;
 
         public MqttClient(string server, int port)
         {
@@ -42,6 +46,7 @@ namespace Mqtt
             _client.UseDisconnectedHandler(e =>
             {
                 Console.WriteLine("Desconectou do broker.");
+                OnDisconnect?.Invoke();
             });
 
             _client.UseApplicationMessageReceivedHandler(e =>
@@ -50,13 +55,12 @@ namespace Mqtt
                 {
                     try
                     {
-                        var clientId = e.ClientId;
                         var topic = e.ApplicationMessage.Topic;
                         var payload = e.ApplicationMessage.Payload != null ? Encoding.UTF8.GetString(e.ApplicationMessage.Payload) : "";
-                        Console.WriteLine($"Recebeu mensagem de {clientId}. Tópico: {topic}; Payload: {payload}");
+                        Console.WriteLine($"Recebeu mensagem. Tópico: {topic}; Payload: {payload}");
 
                         var json = String.IsNullOrEmpty(payload) ? null : JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
-                        var message = new MqttMessage(topic, json, clientId);
+                        var message = new MqttMessage(topic, json);
                         OnReceiveMessage?.Invoke(message);
                     }
                     catch (Exception exc)

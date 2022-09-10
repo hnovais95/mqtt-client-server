@@ -3,7 +3,7 @@ using Mqtt;
 
 namespace MqttServer
 {
-    [Subscribe("client/request/customers/+")]
+    [Subscribe("client/+/request/customers/+")]
     public class CustomersController
     {
         private readonly IRouter _router;
@@ -20,7 +20,8 @@ namespace MqttServer
         {
             var customers = _customerService.GetAllCustomers();
             var messageId = message.Topic.Split('/')[^1];
-            var topic = $"client/{message.ClientId}/response/customers/{messageId}";
+            var clientId = message.Topic.Split('/')[^4];
+            var topic = $"client/{clientId}/response/customers/{messageId}";
             var payload = new Dictionary<string, object> { { "customers", customers } };
             var response = new MqttMessage(topic, payload);
             _router.SendMessage(response);

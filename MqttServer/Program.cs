@@ -19,8 +19,9 @@ namespace MqttServer
 
             EntityMapper.RegisterTypeMaps();
 
-            _mqttClient = new MqttClient("localhost", 1883);
+            _mqttClient = new MqttClient("test.mosquitto.org", 1883);
             _mqttClient.OnConnect += MqttClient_OnConnect;
+            _mqttClient.OnDisconnect += MqttClient_OnDisconnect;
             _mqttClient.Connect();
 
             _router = new Router(_mqttClient);
@@ -30,6 +31,7 @@ namespace MqttServer
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            _mqttClient.OnDisconnect -= MqttClient_OnDisconnect;
             _mqttClient.Disconnect();
             Console.WriteLine($"Erro inesperado por exceção sem tratamento. Terminating: {e.IsTerminating} Exceção: {(Exception)e.ExceptionObject}.");
         }
@@ -37,6 +39,12 @@ namespace MqttServer
         private static void MqttClient_OnConnect()
         {
             RegisterControllers();
+        }
+
+        private static void MqttClient_OnDisconnect()
+        {
+            Console.WriteLine("Tentando reconectar...");
+            _mqttClient.Connect();
         }
 
         private static void RegisterControllers()
