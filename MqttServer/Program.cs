@@ -1,8 +1,6 @@
 ﻿using System;
 using Mqtt;
 using DataAccess;
-using MqttServer.Controllers;
-using MqttServer.Repositories;
 
 namespace MqttServer
 {

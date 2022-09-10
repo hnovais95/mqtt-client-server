@@ -2,15 +2,15 @@
 using Dapper.Contrib.Extensions;
 using DataAccess.Entities;
 
-namespace DataAccess.Dao
+namespace DataAccess
 {
     public class CustomerDao
     {
-        public IEnumerable<Customer> GetAll()
+        public IEnumerable<CustomerEntity> GetAll()
         {
             using (var conn = ConnectionFactory.GetConnection())
             {
-                return conn.GetAll<Customer>();
+                return conn.GetAll<CustomerEntity>();
             }
         }
     }

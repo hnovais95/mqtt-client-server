@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Mqtt;
-using MqttServer.Repositories;
 
-namespace MqttServer.Controllers
+namespace MqttServer
 {
     public class CustomersController
     {

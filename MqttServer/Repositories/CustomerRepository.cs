@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
+using DataAccess;
 using DataAccess.Entities;
-using DataAccess.Dao;
 
-namespace MqttServer.Repositories
+namespace MqttServer
 {
     public interface ICustomerRepository
     {
-        public IEnumerable<Customer> GetAll();
+        public IEnumerable<CustomerEntity> GetAll();
     }
 
     public class CustomerRepository : ICustomerRepository
     {
-        public IEnumerable<Customer> GetAll()
+        public IEnumerable<CustomerEntity> GetAll()
         {
             var customerDao = new CustomerDao();
             return customerDao.GetAll();

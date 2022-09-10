@@ -3,7 +3,7 @@
 namespace DataAccess.Entities
 {
     [Table("customers")]
-    public class Customer
+    public class CustomerEntity
     {
         [ExplicitKey]
         [Column(Name = "customer_id")]
