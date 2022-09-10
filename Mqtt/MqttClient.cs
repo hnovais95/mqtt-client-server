@@ -50,8 +50,9 @@ namespace Mqtt
                         var payload = e.ApplicationMessage.Payload != null ? Encoding.UTF8.GetString(e.ApplicationMessage.Payload) : "";
                         Console.WriteLine($"Recebeu mensagem de {clientId}. Tópico: {topic}; Payload: {payload}");
 
-                        var body = String.IsNullOrEmpty(payload) ? null : JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
-                        OnReceiveMessage?.Invoke(clientId, topic, body);
+                        var json = String.IsNullOrEmpty(payload) ? null : JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
+                        var message = new MqttMessage(topic, json, clientId);
+                        OnReceiveMessage?.Invoke(message);
                     }
                     catch (Exception exc)
                     {
@@ -105,17 +106,17 @@ namespace Mqtt
             }
         }
 
-        public async void Publish(string topic, Dictionary<string, object> payload)
+        public async void Publish(string topic, Dictionary<string, object>? payload)
         {
             try
             {
                 if (!_client.IsConnected)
                 {
-                    Console.WriteLine("Erro ao publicar mensagem.");
+                    Console.WriteLine("Erro ao publicar mensagem. O cliente MQTT não está conectado ao broker.");
                     return;
                 }
 
-                var jsonString = JsonConvert.SerializeObject(payload);
+                var jsonString = payload != null ? JsonConvert.SerializeObject(payload) : "";
                 var message = new MqttApplicationMessageBuilder()
                     .WithTopic(topic)
                     .WithPayload(jsonString)
@@ -126,11 +127,11 @@ namespace Mqtt
 
                 if (task.ReasonCode == MqttClientPublishReasonCode.Success)
                 {
-                    Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {topic}; Payload: {jsonString}.");
+                    Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {topic}; Payload: {jsonString}");
                 } 
                 else
                 {
-                    Console.WriteLine($"Erro publicar mensagem. Tópico: {topic}; Payload: {jsonString}.");
+                    Console.WriteLine($"Erro publicar mensagem. Tópico: {topic}; Payload: {jsonString}");
                 }
             }
             catch (Exception exc)

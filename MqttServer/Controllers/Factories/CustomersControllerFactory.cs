@@ -4,11 +4,11 @@ namespace MqttServer
 {
     public class CustomersControllerFactory
     {
-        public static CustomersController MakeController(IMqtt mqttClient)
+        public static CustomersController MakeController(IRouter router)
         {
             var customerRepository = new CustomerRepository();
             var customerService = new CustomerService(customerRepository);
-            return new CustomersController(mqttClient, customerService);
+            return new CustomersController(router, customerService);
         }
     }
 }
