@@ -1,18 +1,21 @@
 ﻿using System;
 using Mqtt;
+using DataAccess;
+using MqttServer.Controllers;
+using MqttServer.Repositories;
 
 namespace MqttServer
 {
     class Program
     {
         private static MqttClient _mqttClient;
-        private static Interactor _interactor;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Iniciou servidor.");
+            EntityMapper.RegisterTypeMaps();
             _mqttClient = new MqttClient("localhost", 1883);
-            _interactor = new Interactor(_mqttClient);
+            _ = new CustomersController(_mqttClient, new CustomerRepository());
             _mqttClient.Connect();
             while (true) ;
         }

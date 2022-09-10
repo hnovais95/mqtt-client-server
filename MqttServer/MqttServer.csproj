@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Mqtt\Mqtt.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+	</ItemGroup>
+
 </Project>
