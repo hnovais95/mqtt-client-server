@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Mqtt
 {
-    public delegate void ReceiveMessageDelegate(string clientId, string topic, Dictionary<string, object>? body);
+    public delegate void ReceiveMessageDelegate(MqttMessage message);
     public delegate void ConnectDelegate();
 
     public interface IMqtt
@@ -13,6 +13,6 @@ namespace Mqtt
         public void Connect();
         public void Disconnect();
         public void Subscribe(string topic);
-        public void Publish(string topic, Dictionary<string, object> payload);
+        public void Publish(string topic, Dictionary<string, object>? payload);
     }
 }
