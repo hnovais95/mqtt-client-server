@@ -27,8 +27,8 @@ namespace MqttServer
             var components = topic.Split('/');
             if (components.Length < 4) { return; }
 
-            var resource = components[components.Length - 2];
-            var messageId = components[components.Length - 1];
+            var resource = components[^2];
+            var messageId = components[^1];
 
             var customers = _customerRepository.GetAll().Select(x => x.ContactName);
             var response = new Dictionary<string, object> { { "customers", customers } };
