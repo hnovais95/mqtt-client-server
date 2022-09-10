@@ -13,7 +13,7 @@ namespace MqttServer
             Console.WriteLine("Iniciou servidor.");
             EntityMapper.RegisterTypeMaps();
             _mqttClient = new MqttClient("localhost", 1883);
-            _ = new CustomersController(_mqttClient, new CustomerRepository());
+            _ = CustomersControllerFactory.MakeController(_mqttClient);
             _mqttClient.Connect();
             while (true) ;
         }

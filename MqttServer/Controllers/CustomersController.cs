@@ -6,15 +6,15 @@ namespace MqttServer
 {
     public class CustomersController
     {
-        private IMqtt _mqttClient;
-        private ICustomerRepository _customerRepository;
+        private readonly IMqtt _mqttClient;
+        private readonly ICustomerService _customerService;
 
-        public CustomersController(IMqtt mqttClient, ICustomerRepository customerRepository)
+        public CustomersController(IMqtt mqttClient, ICustomerService customerService)
         {
             _mqttClient = mqttClient;
             _mqttClient.OnConnect += MqttClient_OnConnect;
             _mqttClient.OnReceiveMessage += MqttClient_OnReceiveMessage;
-            _customerRepository = customerRepository;
+            _customerService = customerService;
         }
 
         private void MqttClient_OnConnect()
@@ -32,7 +32,7 @@ namespace MqttServer
             var resource = topic.Split('/')[^2];
             var messageId = topic.Split('/')[^1];
 
-            var customers = _customerRepository.GetAll().Select(x => x.ContactName);
+            var customers = _customerService.GetAllCustomers().Select(x => x.ContactName);
             var response = new Dictionary<string, object> { { "customers", customers } };
             _mqttClient.Publish($"client/{clientId}/response/{resource}/{messageId}", response);
         }

@@ -4,10 +4,6 @@ using DataAccess.Entities;
 
 namespace MqttServer
 {
-    public interface ICustomerRepository
-    {
-        public IEnumerable<CustomerEntity> GetAll();
-    }
 
     public class CustomerRepository : ICustomerRepository
     {
