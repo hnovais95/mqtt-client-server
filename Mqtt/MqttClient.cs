@@ -39,6 +39,11 @@ namespace Mqtt
                 OnConnect?.Invoke();
             });
 
+            _client.UseDisconnectedHandler(e =>
+            {
+                Console.WriteLine("Desconectou do broker.");
+            });
+
             _client.UseApplicationMessageReceivedHandler(e =>
             {
                 Task.Run(() =>

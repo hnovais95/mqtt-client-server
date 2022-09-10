@@ -15,6 +15,8 @@ namespace MqttServer
         {
             Console.WriteLine("Iniciou servidor.");
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             EntityMapper.RegisterTypeMaps();
 
             _mqttClient = new MqttClient("localhost", 1883);
@@ -24,6 +26,12 @@ namespace MqttServer
             _router = new Router(_mqttClient);
 
             while (true) ;
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            _mqttClient.Disconnect();
+            Console.WriteLine($"Erro inesperado por exceção sem tratamento. Terminating: {e.IsTerminating} Exceção: {(Exception)e.ExceptionObject}.");
         }
 
         private static void MqttClient_OnConnect()
