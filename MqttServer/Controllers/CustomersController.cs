@@ -24,11 +24,13 @@ namespace MqttServer
 
         private void MqttClient_OnReceiveMessage(string clientId, string topic, Dictionary<string, object>? body)
         {
-            var components = topic.Split('/');
-            if (components.Length < 4) { return; }
+            var topicPattern = @"^client/request/\w+/\w+$";
+            var isMatching = RegexEvaluator.Evaluete(topicPattern, topic);
 
-            var resource = components[^2];
-            var messageId = components[^1];
+            if (!isMatching) { return; }
+
+            var resource = topic.Split('/')[^2];
+            var messageId = topic.Split('/')[^1];
 
             var customers = _customerRepository.GetAll().Select(x => x.ContactName);
             var response = new Dictionary<string, object> { { "customers", customers } };
