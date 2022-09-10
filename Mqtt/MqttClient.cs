@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
@@ -40,26 +41,34 @@ namespace Mqtt
 
             _client.UseApplicationMessageReceivedHandler(e =>
             {
-                try
+                Task.Run(() =>
                 {
-                    var clientId = e.ClientId;
-                    var topic = e.ApplicationMessage.Topic;
-                    var payload = e.ApplicationMessage.Payload != null ? Encoding.UTF8.GetString(e.ApplicationMessage.Payload) : "";
-                    Console.WriteLine($"Recebeu mensagem de {clientId}. Tópico: {topic}; Payload: {payload}");
+                    try
+                    {
+                        var clientId = e.ClientId;
+                        var topic = e.ApplicationMessage.Topic;
+                        var payload = e.ApplicationMessage.Payload != null ? Encoding.UTF8.GetString(e.ApplicationMessage.Payload) : "";
+                        Console.WriteLine($"Recebeu mensagem de {clientId}. Tópico: {topic}; Payload: {payload}");
 
-                    var body = String.IsNullOrEmpty(payload) ? null : JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
-                    OnReceiveMessage?.Invoke(clientId, topic, body);
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine($"Erro ao decodificar mensagem. Exceção: {exc}.");
-                }
+                        var body = String.IsNullOrEmpty(payload) ? null : JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
+                        OnReceiveMessage?.Invoke(clientId, topic, body);
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine($"Erro ao decodificar mensagem. Exceção: {exc}.");
+                    }
+                });
             });
         }
 
         public void Connect()
         {
             _client.ConnectAsync(_options);
+        }
+
+        public void Disconnect()
+        {
+            _client.DisconnectAsync();
         }
 
         public async void Subscribe(string topic)
@@ -84,6 +93,10 @@ namespace Mqtt
                     (task.Items[0].ResultCode == MqttClientSubscribeResultCode.GrantedQoS2))
                 {
                     Console.WriteLine($"Tópico {topic} assinado com sucesso.");
+                }
+                else
+                {
+                    Console.WriteLine($"Erro subscrever tópico {topic}.");
                 }
             }
             catch (Exception exc)
@@ -114,6 +127,10 @@ namespace Mqtt
                 if (task.ReasonCode == MqttClientPublishReasonCode.Success)
                 {
                     Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {topic}; Payload: {jsonString}.");
+                } 
+                else
+                {
+                    Console.WriteLine($"Erro publicar mensagem. Tópico: {topic}; Payload: {jsonString}.");
                 }
             }
             catch (Exception exc)
