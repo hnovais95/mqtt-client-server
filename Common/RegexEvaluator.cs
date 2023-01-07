@@ -1,10 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace MqttServer
+namespace Common
 {
     public class RegexEvaluator
     {
-
         public static bool Evaluate(string pattern, string text)
         {
             var regex = new Regex(pattern);

@@ -7,7 +7,7 @@ namespace MqttServer
 {
     class Program
     {
-        private static IMqtt _mqttClient;
+        private static IMqttClientService _mqttClient;
         private static IRouter _router;
         private static List<object> _controllers;
 
@@ -19,7 +19,7 @@ namespace MqttServer
 
             EntityMapper.RegisterTypeMaps();
 
-            _mqttClient = new MqttClient("test.mosquitto.org", 1883);
+            _mqttClient = new MqttClient("127.0.0.1", 1883);
             _mqttClient.OnConnect += MqttClient_OnConnect;
             _mqttClient.OnDisconnect += MqttClient_OnDisconnect;
             _mqttClient.Connect();

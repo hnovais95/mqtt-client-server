@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using MQTTnet.Client.Subscribing;
 using MQTTnet.Client.Publishing;
-using Newtonsoft.Json;
 
 namespace Mqtt
 {
-    public class MqttClient: IMqtt
+    public class MqttClient: IMqttClientService
     {
         private IMqttClient _client;
         private IMqttClientOptions _options;
 
         public bool IsConnected => _client.IsConnected;
+        public string ClientId => _client.Options.ClientId;
 
-        public event ReceiveMessageDelegate OnReceiveMessage;
+        public event DelOnReceiveMessage OnReceiveMessage;
         public event Action OnConnect;
         public event Action OnDisconnect;
 
@@ -59,13 +60,12 @@ namespace Mqtt
                         var payload = e.ApplicationMessage.Payload != null ? Encoding.UTF8.GetString(e.ApplicationMessage.Payload) : "";
                         Console.WriteLine($"Recebeu mensagem. Tópico: {topic}; Payload: {payload}");
 
-                        var json = String.IsNullOrEmpty(payload) ? null : JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
-                        var message = new MqttMessage(topic, json);
+                        var message = new MqttMessage(topic, payload);
                         OnReceiveMessage?.Invoke(message);
                     }
                     catch (Exception exc)
                     {
-                        Console.WriteLine($"Erro ao decodificar mensagem. Exceção: {exc}.");
+                        Console.WriteLine($"Erro ao receber mensagem. Exceção: {exc}.");
                     }
                 });
             });
@@ -115,7 +115,7 @@ namespace Mqtt
             }
         }
 
-        public async void Publish(string topic, Dictionary<string, object>? payload)
+        public async void Publish(MqttMessage mqttMessage)
         {
             try
             {
@@ -125,9 +125,9 @@ namespace Mqtt
                     return;
                 }
 
-                var jsonString = payload != null ? JsonConvert.SerializeObject(payload) : "";
+                var jsonString = mqttMessage.Payload != null ? JsonSerializer.Serialize(mqttMessage.Payload) : "";
                 var message = new MqttApplicationMessageBuilder()
-                    .WithTopic(topic)
+                    .WithTopic(mqttMessage.Topic)
                     .WithPayload(jsonString)
                     .WithAtLeastOnceQoS()
                     .Build();
@@ -136,11 +136,11 @@ namespace Mqtt
 
                 if (task.ReasonCode == MqttClientPublishReasonCode.Success)
                 {
-                    Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {topic}; Payload: {jsonString}");
+                    Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {mqttMessage.Topic}; Payload: {jsonString}");
                 } 
                 else
                 {
-                    Console.WriteLine($"Erro publicar mensagem. Tópico: {topic}; Payload: {jsonString}");
+                    Console.WriteLine($"Erro publicar mensagem. Tópico: {mqttMessage.Topic}; Payload: {jsonString}");
                 }
             }
             catch (Exception exc)

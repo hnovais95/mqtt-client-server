@@ -16,11 +16,11 @@ namespace MqttServer
             _customerService = customerService;
         }
 
-        private void Router_OnRequestCustomers(MqttMessage message)
+        private void Router_OnRequestCustomers(MqttMessage mqttMessage)
         {
             var customers = _customerService.GetAllCustomers();
-            var messageId = message.Topic.Split('/')[^1];
-            var clientId = message.Topic.Split('/')[^4];
+            var messageId = mqttMessage.Topic.Split('/')[^1];
+            var clientId = mqttMessage.Topic.Split('/')[^4];
             var topic = $"client/{clientId}/response/customers/{messageId}";
             var payload = new Dictionary<string, object> { { "customers", customers } };
             var response = new MqttMessage(topic, payload);

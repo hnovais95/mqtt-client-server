@@ -1,14 +1,15 @@
 ﻿using Mqtt;
+using Common;
 
 namespace MqttServer
 {
     public class Router: IRouter
     {
-        public event RequestCustomersDelegate OnRequestCustomers;
+        public event DelOnRequestCustomers OnRequestCustomers;
 
-        private readonly IMqtt _mqttClient;
+        private readonly IMqttClientService _mqttClient;
 
-        public Router(IMqtt mqttClient)
+        public Router(IMqttClientService mqttClient)
         {
             _mqttClient = mqttClient;
             _mqttClient.OnReceiveMessage += MqttClient_OnReceiveMessage;
@@ -23,9 +24,9 @@ namespace MqttServer
             }
         }
 
-        public void SendMessage(MqttMessage message)
+        public void SendMessage(MqttMessage mqttMessage)
         {
-            _mqttClient.Publish(message.Topic, message.Payload);
+            _mqttClient.Publish(mqttMessage);
         }
     }
 }

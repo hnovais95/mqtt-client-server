@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Mqtt\Mqtt.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Client\Client.Screen.cs">
+      <DependentUpon>Client.cs</DependentUpon>
+    </Compile>
+	<Compile Update="Client\Client.Menu.cs">
+		<DependentUpon>Client.cs</DependentUpon>
+	</Compile>
+  </ItemGroup>
+
+</Project>
