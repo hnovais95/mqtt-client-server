@@ -2,7 +2,7 @@
 using DataAccess;
 using DataAccess.Entities;
 
-namespace MqttServer
+namespace Server
 {
 
     public class CustomerRepository : ICustomerRepository

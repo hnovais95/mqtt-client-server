@@ -10,14 +10,14 @@ namespace Client
 {
     static partial class Client
     {
-        private static Form1 s_frmRoot;
+        private static FrmRoot s_frmRoot;
         private static IMqttClientService s_mqttClient;
 
-        public static INotificationCenter NotificationCenter { get; private set; }
+        public static IClientNotificationCenter NotificationCenter { get; private set; }
 
         public static void Configure(IMqttClientService mqttClient)
         {
-            NotificationCenter = new NotificationCenter(mqttClient);
+            NotificationCenter = new ClientNotificationCenter(mqttClient);
             s_frmRoot = new();
             s_mqttClient = mqttClient;
             s_mqttClient.OnConnect += MqttClient_OnConnect;
@@ -27,18 +27,19 @@ namespace Client
 
         public static void Start()
         {
+            Console.WriteLine("Iniciou cliente!");
             s_mqttClient.Connect();
             Application.Run(s_frmRoot);
         }
 
         private static void MqttClient_OnConnect()
         {
-            Console.WriteLine("Cliente conectado!");
+            Console.WriteLine("Cliente conectado ao broker MQTT!");
         }
 
         private static void MqttClient_OnDisconnect()
         {
-            Console.WriteLine("Tentando reconectar...");
+            Console.WriteLine("Tentando reconectar ao broker MQTT...");
             s_mqttClient.Connect();
         }
     }

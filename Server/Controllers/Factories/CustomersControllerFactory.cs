@@ -1,14 +1,12 @@
-﻿using Mqtt;
-
-namespace MqttServer
+﻿namespace Server
 {
-    public class CustomersControllerFactory
+    class CustomersControllerFactory
     {
-        public static CustomersController MakeController(IRouter router)
+        public static CustomersController MakeController(IServerNotificationCenter notificationCenter)
         {
             var customerRepository = new CustomerRepository();
             var customerService = new CustomerService(customerRepository);
-            return new CustomersController(router, customerService);
+            return new CustomersController(notificationCenter, customerService);
         }
     }
 }

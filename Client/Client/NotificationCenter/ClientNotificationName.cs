@@ -2,18 +2,18 @@
 
 namespace Client
 {
-    sealed class NotificationName : IEquatable<NotificationName>
+    sealed class ClientNotificationName : IEquatable<ClientNotificationName>
     {
-        public static NotificationName Customers => new(@"^sys/client/[-\w]+/response/customers/[-\w]+$");
+        public static ClientNotificationName Customers => new(@"^sys/client/[-\w]+/customers/callback/[-\w]+$");
 
         public string Value { get; private set; }
 
-        private NotificationName(string value)
+        private ClientNotificationName(string value)
         {
             Value = value;
         }
 
-        public bool Equals(NotificationName other)
+        public bool Equals(ClientNotificationName other)
         {
             return (other != null) && (Value == other.Value);
         }

@@ -12,35 +12,29 @@ using Common.Models;
 
 namespace Client
 {
-    public partial class Form1 : Form
+    public partial class FrmRoot : Form
     {
         public MenuStrip MainMenu
         {
             get  { return menuStrip1; }
         }
 
-        public Form1()
+        public FrmRoot()
         {
             InitializeComponent();
-            Client.NotificationCenter.OnResponseCustomers += NotificationCenter_OnResponseCustomers;
-        }
-
-        private void NotificationCenter_OnResponseCustomers(MqttMessage message)
-        {
-            MessageBox.Show("Recebeu a mensagem!");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Task.Run((Action)(() =>
+            Task.Run(() =>
             {
                 try
                 {
-                    var response = Client.NotificationCenter.PublishAndWaitCallback<IEnumerable<CustomerModel>>(NotificationName.Customers, null, 5000);
-                    var description = response.Select(x => x.ToString()).Aggregate((acc, x) => acc + "\n" + x).Trim('\n');
+                    var customers = Client.NotificationCenter.PublishAndWaitCallback<IEnumerable<CustomerModel>>(ClientPublishCommand.RequestCustomers, null, 5000);
 
-                    if (response != null)
+                    if (customers != null)
                     {
+                        var description = customers.Select(x => x.ToString()).Aggregate((acc, x) => acc + "\n" + x).Trim('\n');
                         MessageBox.Show(description, "Recebeu a mensagem!");
                     }
                     else
@@ -52,7 +46,7 @@ namespace Client
                 {
                     Console.WriteLine($"Erro ao publicar mensagem aguardando callback. Exc.: {e}");
                 }
-            }));
+            });
         }
     }
 }

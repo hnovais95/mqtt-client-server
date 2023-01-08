@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DataAccess.Entities;
 
-namespace MqttServer
+namespace Server
 {
     public interface ICustomerService
     {

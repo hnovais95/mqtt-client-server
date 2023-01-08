@@ -1,8 +1,9 @@
 ﻿using System;
-namespace MqttServer
+
+namespace Server
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class Subscribe: Attribute
+    class Subscribe: Attribute
     {
         private readonly string[] _topics;
 
