@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mqtt;
 
-namespace App
+namespace Client
 {
     static partial class Client
     {
         private static Form1 s_frmRoot;
         private static IMqttClientService s_mqttClient;
 
-        public static NotificationCenter NotificationCenter { get; private set; }
+        public static INotificationCenter NotificationCenter { get; private set; }
 
         public static void Configure(IMqttClientService mqttClient)
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace App
+namespace Client
 {
     partial class Client
     {

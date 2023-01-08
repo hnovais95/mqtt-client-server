@@ -2,7 +2,7 @@ using System;
 using System.Windows.Forms;
 using Mqtt;
 
-namespace App
+namespace Client
 {
     static class Program
     {

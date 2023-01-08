@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
 using MQTTnet.Client;
@@ -15,6 +16,7 @@ namespace Mqtt
     {
         private IMqttClient _client;
         private IMqttClientOptions _options;
+        private List<MqttResquest> _requestList = new();
 
         public bool IsConnected => _client.IsConnected;
         public string ClientId => _client.Options.ClientId;
@@ -58,14 +60,26 @@ namespace Mqtt
                     {
                         var topic = e.ApplicationMessage.Topic;
                         var payload = e.ApplicationMessage.Payload != null ? Encoding.UTF8.GetString(e.ApplicationMessage.Payload) : "";
-                        Console.WriteLine($"Recebeu mensagem. Tópico: {topic}; Payload: {payload}");
+                        var receivedMessage = new MqttMessage(topic, payload);
 
+                        lock (_requestList)
+                        {
+                            var request = _requestList.Find(x => x.SentMessage.GetID() == receivedMessage.GetID());
+                            if (request != null)
+                            {
+                                request.CallbackMessage = receivedMessage;
+                                request.WaitCallbackManualResetEvent.Set();
+                                return;
+                            }
+                        }
+
+                        Console.WriteLine($"Recebeu mensagem. Tópico: {topic}; Payload: {payload}");
                         var message = new MqttMessage(topic, payload);
-                        OnReceiveMessage?.Invoke(message);
+                        OnReceiveMessage?.Invoke(receivedMessage);
                     }
-                    catch (Exception exc)
+                    catch (Exception e)
                     {
-                        Console.WriteLine($"Erro ao receber mensagem. Exceção: {exc}.");
+                        Console.WriteLine($"Erro ao receber mensagem. Exceção: {e}.");
                     }
                 });
             });
@@ -109,9 +123,9 @@ namespace Mqtt
                     Console.WriteLine($"Erro subscrever tópico {topic}.");
                 }
             }
-            catch (Exception exc)
+            catch (Exception e)
             {
-                Console.WriteLine($"Erro subscrever tópico {topic}. Exceção: {exc}.");
+                Console.WriteLine($"Erro subscrever tópico {topic}. Exc.: {e}.");
             }
         }
 
@@ -119,6 +133,8 @@ namespace Mqtt
         {
             try
             {
+                Console.WriteLine($"Vai publicar mensagem. Tópico: {mqttMessage.Topic}");
+
                 if (!_client.IsConnected)
                 {
                     Console.WriteLine("Erro ao publicar mensagem. O cliente MQTT não está conectado ao broker.");
@@ -132,21 +148,67 @@ namespace Mqtt
                     .WithAtLeastOnceQoS()
                     .Build();
 
-                var task = await _client.PublishAsync(message);
+                var result = await _client.PublishAsync(message);
 
-                if (task.ReasonCode == MqttClientPublishReasonCode.Success)
+                if (result.ReasonCode == MqttClientPublishReasonCode.Success)
                 {
                     Console.WriteLine($"Mensagem publicada com sucesso. Tópico: {mqttMessage.Topic}; Payload: {jsonString}");
                 } 
                 else
                 {
-                    Console.WriteLine($"Erro publicar mensagem. Tópico: {mqttMessage.Topic}; Payload: {jsonString}");
+                    throw new Exception($"A mensagem não foi publicada. ReasonCode: {result.ReasonCode};");
                 }
             }
-            catch (Exception exc)
+            catch (Exception e)
             {
-                Console.WriteLine($"Erro publicar mensagem. Exceção: {exc}.");
+                var payload = mqttMessage.Payload != null ? mqttMessage.Payload.ToString() : "";
+                Console.WriteLine($"Erro publicar mensagem. Tópico: {mqttMessage.Topic}; Payload: {payload}; Exc.: {e}.");
+                throw;
             }
+        }
+
+        public async Task<MqttMessage> PublishAndWaitCallback(MqttMessage mqttMessage, int timeout)
+        {
+            var callbackMessage = await Task.Run(() =>
+            {
+                try
+                {
+                    MqttResquest request = new MqttResquest(mqttMessage, new ManualResetEvent(false));
+                    _requestList.Add(request);
+                    Console.WriteLine($"Inclui envio de mensagem aguardando callback na fila. Tópico: {mqttMessage.Topic}");
+
+                    Publish(mqttMessage);
+
+                    try
+                    {
+                        if (request.WaitCallbackManualResetEvent.WaitOne(timeout, false))
+                        {
+                            Console.WriteLine($"Callback recebido. Tópico: {mqttMessage.Topic}; Payload: {request.CallbackMessage.Payload}");
+                            return request.CallbackMessage;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Tempo de aguardo do callback expirou. MsgID: {mqttMessage.GetID()}");
+                            throw new TimeoutException($"Tempo de aguardo do callback expirou.");
+                        }
+                    }
+                    finally
+                    {
+                        lock (_requestList)
+                        {
+                            _requestList.Remove(request);
+                            Console.WriteLine($"Callaback retirado da fila. MsgID: {mqttMessage.GetID()}");
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Erro ao fazer requisição. Exceção: {e}.");
+                    throw;
+                }
+            });
+
+            return callbackMessage;
         }
     }
 }

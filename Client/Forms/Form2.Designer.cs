@@ -1,5 +1,5 @@
 ﻿
-namespace App
+namespace Client
 {
     partial class Form2
     {

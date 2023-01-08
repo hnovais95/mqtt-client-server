@@ -12,5 +12,11 @@ namespace Mqtt
             Topic = topic;
             Payload = payload;
         }
+
+        public string GetID()
+        {
+            var startIndex = Topic.LastIndexOf('/') + 1;
+            return Topic[startIndex..];
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Mqtt
 {
@@ -18,5 +18,6 @@ namespace Mqtt
         public void Disconnect();
         public void Subscribe(string topic);
         public void Publish(MqttMessage mqttMessage);
+        public Task<MqttMessage> PublishAndWaitCallback(MqttMessage mqttMessage, int timeout);
     }
 }

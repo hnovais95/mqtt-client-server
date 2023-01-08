@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mqtt;
+using Common.Models;
 
-namespace App
+namespace Client
 {
     public partial class Form1 : Form
     {
@@ -31,9 +32,27 @@ namespace App
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var topic = $"client/1/request/customers/{Guid.NewGuid()}";
-            var mqttMessage = new MqttMessage(topic, null);
-            Client.NotificationCenter.SendMessage(NotificationName.Customers, mqttMessage);
+            Task.Run((Action)(() =>
+            {
+                try
+                {
+                    var response = Client.NotificationCenter.PublishAndWaitCallback<IEnumerable<CustomerModel>>(NotificationName.Customers, null, 5000);
+                    var description = response.Select(x => x.ToString()).Aggregate((acc, x) => acc + "\n" + x).Trim('\n');
+
+                    if (response != null)
+                    {
+                        MessageBox.Show(description, "Recebeu a mensagem!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Deu erro!");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Erro ao publicar mensagem aguardando callback. Exc.: {e}");
+                }
+            }));
         }
     }
 }
