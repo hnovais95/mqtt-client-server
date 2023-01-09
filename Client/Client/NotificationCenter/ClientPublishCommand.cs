@@ -2,6 +2,7 @@
 {
     enum ClientPublishCommand
     {
-        RequestCustomers
+        RequestCustomers,
+        AddCustomer
     }
 }

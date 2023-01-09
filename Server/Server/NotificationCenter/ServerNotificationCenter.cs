@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Mqtt;
 using Common;
+using Common.Models;
 
 namespace Server
 {
     class ServerNotificationCenter: IServerNotificationCenter
     {
         public event DelOnRequestCustomers OnRequestCustomers;
+        public event DelOnAddCustomer OnAddCustomer;
 
         private readonly IMqttClientService _mqttClient;
 
@@ -20,9 +22,15 @@ namespace Server
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
-            if (RegexEvaluator.Evaluate(ServerNotificationName.Customers.Value, message.Topic))
+            if (RegexEvaluator.Evaluate(ServerNotificationName.RequestCustomers.Value, message.Topic))
             {
                 OnRequestCustomers?.Invoke(message);
+                return;
+            }
+
+            if (RegexEvaluator.Evaluate(ServerNotificationName.AddCustomer.Value, message.Topic))
+            {
+                OnAddCustomer?.Invoke(message);
                 return;
             }
         }

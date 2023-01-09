@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mqtt;
 using Common.Models;
 
 namespace Client
@@ -34,12 +33,11 @@ namespace Client
 
                     if (customers != null)
                     {
-                        var description = customers.Select(x => x.ToString()).Aggregate((acc, x) => acc + "\n" + x).Trim('\n');
-                        MessageBox.Show(description, "Recebeu a mensagem!");
+                        Client.Screen.Show<FrmCustomers>(customers);
                     }
                     else
                     {
-                        MessageBox.Show("Deu erro!");
+                        MessageBox.Show("Erro", "Não foi possível concluir operação.");
                     }
                 }
                 catch (Exception e)

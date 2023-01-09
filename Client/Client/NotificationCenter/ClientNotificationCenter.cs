@@ -40,6 +40,14 @@ namespace Client
 
         public void Publish(ClientPublishCommand command, object body)
         {
+            switch (command)
+            {
+                case ClientPublishCommand.AddCustomer:
+                    var topic = $"sys/client/{_mqttClient.ClientId}/customers/add/{Guid.NewGuid()}";
+                    var message = new MqttMessage(topic, body);
+                    _mqttClient.Publish(message);
+                    break;
+            }
         }
 
         public T PublishAndWaitCallback<T>(ClientPublishCommand command, object body, int timeout) where T : class

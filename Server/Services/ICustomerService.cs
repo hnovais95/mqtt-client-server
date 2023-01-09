@@ -6,5 +6,6 @@ namespace Server
     public interface ICustomerService
     {
         public IEnumerable<CustomerEntity> GetAllCustomers();
+        public void AddCustomer(CustomerEntity customer);
     }
 }

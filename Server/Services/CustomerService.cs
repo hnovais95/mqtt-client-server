@@ -1,20 +1,26 @@
 ﻿using System.Collections.Generic;
+using DataAccess;
 using DataAccess.Entities;
 
 namespace Server
 {
     public class CustomerService: ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly CustomerDao _customerDao;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(CustomerDao customerDao)
         {
-            _customerRepository = customerRepository;
+            _customerDao = customerDao;
         }
 
         public IEnumerable<CustomerEntity> GetAllCustomers()
         {
-            return _customerRepository.GetAll();
+            return _customerDao.GetAll();
+        }
+
+        public void AddCustomer(CustomerEntity customer)
+        {
+            _customerDao.Insert(customer);
         }
     }
 }

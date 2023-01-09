@@ -7,19 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Common.Models;
 
 namespace Client
 {
-    public partial class Form2 : Form
+    public partial class FrmCustomers : Form
     {
-        public Form2()
+        public FrmCustomers()
         {
             InitializeComponent();
         }
 
+        public void Update(List<CustomerModel> customers)
+        {
+            dataGridView1.DataSource = customers;
+        }
+
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ((Form2)sender).Hide();
+            ((FrmCustomers)sender).Hide();
             e.Cancel = true;
         }
     }

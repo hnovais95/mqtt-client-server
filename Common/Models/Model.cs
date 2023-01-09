@@ -19,19 +19,6 @@ namespace Common.Models
             return stringBuilder.ToString().TrimEnd();
         }
 
-        public T ConvertToEntity<T>()
-        {
-            var serialized = JsonSerializer.Serialize(this);
-            var entity = JsonSerializer.Deserialize<T>(serialized);
-
-            if (entity == null)
-            {
-                throw new FormatException();
-            }
-
-            return entity;
-        }
-
         public static T Parse<T>(object entity) where T : Model
         {
             var entitySerialized = JsonSerializer.Serialize(entity);

@@ -1,11 +1,13 @@
-﻿namespace Server
+﻿using DataAccess;
+
+namespace Server
 {
     class CustomersControllerFactory
     {
         public static CustomersController MakeController(IServerNotificationCenter notificationCenter)
         {
-            var customerRepository = new CustomerRepository();
-            var customerService = new CustomerService(customerRepository);
+            var customerDao = new CustomerDao();
+            var customerService = new CustomerService(customerDao);
             return new CustomersController(notificationCenter, customerService);
         }
     }

@@ -8,7 +8,7 @@ using Common.Models;
 
 namespace Server
 {
-    [Subscribe("sys/client/+/customers/request/+")]
+    [Subscribe("sys/client/+/customers/request/+"), Subscribe("sys/client/+/customers/add/+")]
     class CustomersController
     {
         private readonly IServerNotificationCenter _notificationCenter;
@@ -18,6 +18,7 @@ namespace Server
         {
             _notificationCenter = notifcationCenter;
             _notificationCenter.OnRequestCustomers += NotificationCenter_OnRequestCustomers;
+            _notificationCenter.OnAddCustomer += NotificationCenter_OnAddCustomer;
             _customerService = customerService;
         }
 
@@ -29,6 +30,21 @@ namespace Server
                 var customers = entities.Select(x => Model.Parse<CustomerModel>(x));
                 var callbackId = mqttMessage.GetID();
                 _notificationCenter.Publish(ServerPublishCommand.SendCustomers, customers, callbackId);
+            }
+            catch (Exception e)
+            {
+                var payload = mqttMessage.Payload != null ? mqttMessage.Payload.ToString() : "";
+                Console.WriteLine($"Erro ao tratar requisção. Tópico: {mqttMessage.Topic}; Payload: {payload}; Exc.: {e}");
+            }
+        }
+
+        private void NotificationCenter_OnAddCustomer(MqttMessage mqttMessage)
+        {
+            try
+            {
+                var customerModel = JsonSerializer.Deserialize<CustomerModel>((string)mqttMessage.Payload);
+                var customerEntity = customerModel.ConvertToEntity();
+                _customerService.AddCustomer(customerEntity);
             }
             catch (Exception e)
             {

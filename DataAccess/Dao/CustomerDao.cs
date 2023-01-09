@@ -13,5 +13,13 @@ namespace DataAccess
                 return conn.GetAll<CustomerEntity>();
             }
         }
+
+        public void Insert(CustomerEntity customer)
+        {
+            using (var conn = ConnectionFactory.GetConnection())
+            {
+                conn.Insert(customer);
+            }
+        }
     }
 }
