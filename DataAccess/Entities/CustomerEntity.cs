@@ -1,42 +1,38 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Dapper.FluentMap.Dommel.Mapping;
 
 namespace DataAccess.Entities
 {
-    [Table("customers")]
     public class CustomerEntity
     {
-        [ExplicitKey]
-        [Column(Name = "customer_id")]
         public string CustomerID { get; set; }
-
-        [Column(Name = "company_name")]
         public string CompanyName { get; set; }
-
-        [Column(Name = "contact_name")]
         public string ContactName { get; set; }
-
-        [Column(Name = "contact_title")]
         public string ContactTitle { get; set; }
-
-        [Column(Name = "address")]
         public string Address { get; set; }
-
-        [Column(Name = "city")]
         public string City { get; set; }
-
-        [Column(Name = "region")]
         public string Region { get; set; }
-
-        [Column(Name = "postal_code")]
         public string PostalCode { get; set; }
-
-        [Column(Name = "country")]
         public string Country { get; set; }
-
-        [Column(Name = "phone")]
         public string Phone { get; set; }
-
-        [Column(Name = "fax")]
         public string Fax { get; set; }
+    }
+
+    public class CustomerMap: DommelEntityMap<CustomerEntity>
+    {
+        public CustomerMap()
+        {
+            ToTable("customers");
+            Map(x => x.CustomerID).ToColumn("customer_id").IsKey();
+            Map(x => x.CompanyName).ToColumn("company_name");
+            Map(x => x.ContactName).ToColumn("contact_name");
+            Map(x => x.ContactTitle).ToColumn("contact_title");
+            Map(x => x.Address).ToColumn("address");
+            Map(x => x.City).ToColumn("city");
+            Map(x => x.Region).ToColumn("region");
+            Map(x => x.PostalCode).ToColumn("postal_code");
+            Map(x => x.Country).ToColumn("country");
+            Map(x => x.Phone).ToColumn("phone");
+            Map(x => x.Fax).ToColumn("fax");
+        }
     }
 }

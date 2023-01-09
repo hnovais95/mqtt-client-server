@@ -22,7 +22,7 @@ namespace Server
             s_mqttClient.OnConnect += MqttClient_OnConnect;
             s_mqttClient.OnDisconnect += MqttClient_OnDisconnect;
             NotificationCenter = new ServerNotificationCenter(mqttClient);
-            EntityMapper.RegisterTypeMaps();
+            RegisterMapping.Register();
         }
 
         public static void Start()

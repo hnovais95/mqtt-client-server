@@ -45,6 +45,7 @@ namespace Server
                 var customerModel = JsonSerializer.Deserialize<CustomerModel>((string)mqttMessage.Payload);
                 var customerEntity = customerModel.ConvertToEntity();
                 _customerService.AddCustomer(customerEntity);
+                Console.WriteLine($"Cliente adicionado com sucesso: CustomerID: {customerEntity.CustomerID}");
             }
             catch (Exception e)
             {
