@@ -25,7 +25,7 @@ namespace Client
             button1.Enabled = !hasAnyEmptyOrNull;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             Task.Run(() =>
             {
@@ -50,7 +50,10 @@ namespace Client
 
                     if (result.ResultCode == RequestResultCode.Success)
                     {
-                        Close();
+                        Invoke((MethodInvoker)delegate
+                        {
+                            Close();
+                        });
                     }
                     else
                     {
@@ -59,8 +62,11 @@ namespace Client
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Erro ao adicionar cliente. Exc.: {e}");
-                    MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Invoke((MethodInvoker)delegate
+                    {
+                        Console.WriteLine($"Erro ao adicionar cliente. Exc.: {e}");
+                        MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
                 }
             });
         }

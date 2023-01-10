@@ -22,9 +22,34 @@ namespace Client
             InitializeComponent();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FrmRoot_Shown(object sender, EventArgs e)
+        {
+            timer1.Enabled = true;
+        }
+
+        private void FrmRoot_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            timer1.Enabled = false;
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (Client.HealthStatus)
+            {
+                label1.BackColor = Color.Lime;
+            }
+            else
+            {
+                if (label1.BackColor == Color.Red)
+                    label1.BackColor = Color.Brown;
+                else
+                    label1.BackColor = Color.Red;
+            }
         }
     }
 }

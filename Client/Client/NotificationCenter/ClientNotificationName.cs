@@ -4,7 +4,7 @@ namespace Client
 {
     sealed class ClientNotificationName : IEquatable<ClientNotificationName>
     {
-        public static ClientNotificationName Customers => new(@"^sys/client/[-\w]+/customers/get/callback/[-\w]+$");
+        public static ClientNotificationName GetCustomerResponse => new(@"^sys/client/[-\w]+/customers/get/callback/[-\w]+$");
 
         public string Value { get; private set; }
 

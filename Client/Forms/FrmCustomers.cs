@@ -52,9 +52,12 @@ namespace Client
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Erro ao carregar clientes. Exc.: {e}");
-                    MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Hide();
+                    Invoke((MethodInvoker)delegate
+                    {
+                        Console.WriteLine($"Erro ao carregar clientes. Exc.: {e}");
+                        MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Hide();
+                    });
                 }
             });
         }

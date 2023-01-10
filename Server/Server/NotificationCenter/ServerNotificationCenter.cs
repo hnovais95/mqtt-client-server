@@ -17,7 +17,13 @@ namespace Server
         public ServerNotificationCenter(IMqttClientService mqttClient)
         {
             _mqttClient = mqttClient;
+            _mqttClient.OnConnect += MqttClient_OnConnect;
             _mqttClient.OnReceiveMessage += MqttClient_OnReceiveMessage;
+        }
+
+        private void MqttClient_OnConnect()
+        {
+            _mqttClient.Subscribe("sys/client/+/status/+");
         }
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
@@ -33,6 +39,19 @@ namespace Server
                 OnAddCustomer?.Invoke(message);
                 return;
             }
+
+            if (RegexEvaluator.Evaluate(ServerNotificationName.GetStatus.Value, message.Topic))
+            {
+                var topic = $"sys/server/{_mqttClient.ClientId}/status/callback/{message.GetID()}";
+                var result = new RequestResult()
+                {
+                    ResultCode = RequestResultCode.Success,
+                    Message = "Healthy"
+                };
+                var callbackMessage = new MqttMessage(topic, result);
+                _mqttClient.Publish(callbackMessage);
+                return;
+            }
         }
 
         public void Publish(ServerPublishCommand command, object body, string callbackId)
@@ -42,10 +61,10 @@ namespace Server
             switch (command)
             {
                 case ServerPublishCommand.GetCustomersResponse:
-                    topic = $"sys/client/{_mqttClient.ClientId}/customers/get/callback/{callbackId}";
+                    topic = $"sys/server/{_mqttClient.ClientId}/customers/get/callback/{callbackId}";
                     break;
                 case ServerPublishCommand.AddCustomerResponse:
-                    topic = $"sys/client/{_mqttClient.ClientId}/customers/add/callback/{callbackId}";
+                    topic = $"sys/server/{_mqttClient.ClientId}/customers/add/callback/{callbackId}";
                     break;
                 default:
                     return;

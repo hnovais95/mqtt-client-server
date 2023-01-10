@@ -3,6 +3,6 @@
     enum ServerPublishCommand
     {
         GetCustomersResponse,
-        AddCustomerResponse,
+        AddCustomerResponse
     }
 }

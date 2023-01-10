@@ -27,13 +27,14 @@ namespace Client
 
         private void MqttClient_OnConnect()
         {
-            _mqttClient.Subscribe("sys/client/+/customers/get/callback/+");
-            _mqttClient.Subscribe("sys/client/+/customers/add/callback/+");
+            _mqttClient.Subscribe("sys/server/+/customers/get/callback/+");
+            _mqttClient.Subscribe("sys/server/+/customers/add/callback/+");
+            _mqttClient.Subscribe("sys/server/+/status/callback/+");
         }
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
-            if (RegexEvaluator.Evaluate(ClientNotificationName.Customers.Value, message.Topic))
+            if (RegexEvaluator.Evaluate(ClientNotificationName.GetCustomerResponse.Value, message.Topic))
             {
                 OnReceiveCustomers?.Invoke(message);
                 return;
@@ -55,6 +56,9 @@ namespace Client
                     break;
                 case ClientPublishCommand.AddCustomer:
                     topic = $"sys/client/{_mqttClient.ClientId}/customers/add/{Guid.NewGuid()}";
+                    break;
+                case ClientPublishCommand.HealthCheck:
+                    topic = $"sys/client/{_mqttClient.ClientId}/status/{Guid.NewGuid()}";
                     break;
                 default:
                     return default;

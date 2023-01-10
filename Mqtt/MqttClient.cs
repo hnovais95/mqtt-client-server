@@ -138,7 +138,7 @@ namespace Mqtt
                 if (!_client.IsConnected)
                 {
                     Console.WriteLine("Erro ao publicar mensagem. O cliente MQTT não está conectado ao broker.");
-                    return;
+                    throw new Exception($"O cliente MQTT não está conectado ao broker.");
                 }
 
                 var jsonString = mqttMessage.Payload != null ? JsonSerializer.Serialize(mqttMessage.Payload) : "";

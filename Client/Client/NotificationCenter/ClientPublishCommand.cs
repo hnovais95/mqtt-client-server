@@ -3,6 +3,7 @@
     enum ClientPublishCommand
     {
         GetCustomers,
-        AddCustomer
+        AddCustomer,
+        HealthCheck
     }
 }
