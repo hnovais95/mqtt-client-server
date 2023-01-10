@@ -27,21 +27,42 @@ namespace Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var customer = new CustomerModel
+            Task.Run(() =>
             {
-                CustomerID = txtCustomerID.Text,
-                CompanyName = txtCompanyName.Text,
-                ContactName = txtContactName.Text,
-                ContactTitle = txtContactTitle.Text,
-                Address = txtAddress.Text,
-                City = txtCity.Text,
-                Region = txtRegion.Text,
-                PostalCode = txtZipcode.Text,
-                Country = txtCountry.Text,
-                Phone = txtPhone.Text,
-                Fax = txtFax.Text,
-            };
-            Client.NotificationCenter.Publish(ClientPublishCommand.AddCustomer, customer);
+                try
+                {
+                    var customer = new CustomerDTO
+                    {
+                        CustomerID = txtCustomerID.Text,
+                        CompanyName = txtCompanyName.Text,
+                        ContactName = txtContactName.Text,
+                        ContactTitle = txtContactTitle.Text,
+                        Address = txtAddress.Text,
+                        City = txtCity.Text,
+                        Region = txtRegion.Text,
+                        PostalCode = txtZipcode.Text,
+                        Country = txtCountry.Text,
+                        Phone = txtPhone.Text,
+                        Fax = txtFax.Text,
+                    };
+
+                    var result = Client.NotificationCenter.PublishAndWaitCallback(ClientPublishCommand.AddCustomer, customer, 5000);
+
+                    if (result.ResultCode == RequestResultCode.Success)
+                    {
+                        Close();
+                    }
+                    else
+                    {
+                        throw new Exception(result.Message);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Erro ao adicionar cliente. Exc.: {e}");
+                    MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            });
         }
     }
 }

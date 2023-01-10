@@ -22,31 +22,18 @@ namespace Client
 
         private static void BuildMenu()
         {
-            var menuItem1 = new MenuItem("Menu 1", null, new List<MenuItem>()
+            var menuItem1 = new MenuItem("Clientes", null, new List<MenuItem>()
             {
+                new MenuItem("Listar clientes", typeof(FrmCustomers)),
                 new MenuItem("Cadastrar cliente", typeof(FrmAddCustomer)),
-                new MenuItem("Item 2", null),
-                new MenuItem("Submenu 1", null, new List<MenuItem>()
+                new MenuItem("Exemplo - Submenu", null, new List<MenuItem>()
                 {
-                    new MenuItem("Item 3", null),
-                    new MenuItem("Item 4", null),
-                    new MenuItem("Submenu 2", null, new List<MenuItem>()
-                    {
-                        new MenuItem("Item 5", null),
-                        new MenuItem("Item 6", null)
-                    }),
-                }),
-                new MenuItem("Item 7", null),
-            });
-
-            var menuItem2 = new MenuItem("Menu 2", null, new List<MenuItem>()
-            {
-                new MenuItem("Item 1", null),
-                new MenuItem("Item 2", null)
+                    new MenuItem("Item 1", null),
+                    new MenuItem("Item 2", null),
+                })
             });
 
             s_frmRoot.MainMenu.Items.Add(CreateToolStripMenuItem(menuItem1));
-            s_frmRoot.MainMenu.Items.Add(CreateToolStripMenuItem(menuItem2));
         }
 
         private static ToolStripMenuItem CreateToolStripMenuItem(MenuItem item)

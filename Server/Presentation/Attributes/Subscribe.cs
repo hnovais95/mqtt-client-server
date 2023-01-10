@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Server
+namespace Server.Presentation
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     class Subscribe: Attribute

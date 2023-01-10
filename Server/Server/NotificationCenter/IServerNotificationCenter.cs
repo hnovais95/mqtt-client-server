@@ -1,4 +1,5 @@
 ﻿using Mqtt;
+using Common.Models;
 
 namespace Server
 {
@@ -11,6 +12,6 @@ namespace Server
         public event DelOnAddCustomer OnAddCustomer;
 
         public void Publish(ServerPublishCommand command, object body, string callbackId = null);
-        public T PublishAndWaitCallback<T>(ServerPublishCommand command, object body, int timeout) where T : class;
+        public RequestResult PublishAndWaitCallback(ServerPublishCommand command, object body, int timeout);
     }
 }

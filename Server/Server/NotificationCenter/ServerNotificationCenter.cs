@@ -22,7 +22,7 @@ namespace Server
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
-            if (RegexEvaluator.Evaluate(ServerNotificationName.RequestCustomers.Value, message.Topic))
+            if (RegexEvaluator.Evaluate(ServerNotificationName.GetCustomers.Value, message.Topic))
             {
                 OnRequestCustomers?.Invoke(message);
                 return;
@@ -37,19 +37,27 @@ namespace Server
 
         public void Publish(ServerPublishCommand command, object body, string callbackId)
         {
+            string topic;
+
             switch (command)
             {
-                case ServerPublishCommand.SendCustomers:
-                    var topic = $"sys/client/{_mqttClient.ClientId}/customers/callback/{callbackId}";
-                    var message = new MqttMessage(topic, body);
-                    _mqttClient.Publish(message);
+                case ServerPublishCommand.GetCustomersResponse:
+                    topic = $"sys/client/{_mqttClient.ClientId}/customers/get/callback/{callbackId}";
                     break;
+                case ServerPublishCommand.AddCustomerResponse:
+                    topic = $"sys/client/{_mqttClient.ClientId}/customers/add/callback/{callbackId}";
+                    break;
+                default:
+                    return;
             }
+
+            var message = new MqttMessage(topic, body);
+            _mqttClient.Publish(message);
         }
 
-        public T PublishAndWaitCallback<T>(ServerPublishCommand command, object body, int timeout) where T : class
+        public RequestResult PublishAndWaitCallback(ServerPublishCommand command, object body, int timeout)
         {
-            return default;
+            throw new NotImplementedException();
         }
     }
 }

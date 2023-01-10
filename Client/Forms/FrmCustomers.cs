@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common.Models;
@@ -18,15 +19,44 @@ namespace Client
             InitializeComponent();
         }
 
-        public void Update(List<CustomerModel> customers)
-        {
-            dataGridView1.DataSource = customers;
-        }
-
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ((FrmCustomers)sender).Hide();
             e.Cancel = true;
+            Hide();
+        }
+
+        private void FrmCustomers_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible == false)
+            {
+                return;
+            }
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    var result = Client.NotificationCenter.PublishAndWaitCallback(ClientPublishCommand.GetCustomers, null, 5000);
+
+                    if (result.ResultCode == RequestResultCode.Success)
+                    {
+                        Invoke((MethodInvoker)delegate
+                        {
+                            dataGridView1.DataSource = result.DeserializeBody<List<CustomerDTO>>();
+                        });
+                    }
+                    else
+                    {
+                        throw new Exception(result.Message);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Erro ao carregar clientes. Exc.: {e}");
+                    MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Hide();
+                }
+            });
         }
     }
 }

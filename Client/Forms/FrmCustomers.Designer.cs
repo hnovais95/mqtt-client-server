@@ -53,6 +53,7 @@ namespace Client
             this.Name = "FrmCustomers";
             this.Text = "Clientes";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            this.VisibleChanged += new System.EventHandler(this.FrmCustomers_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

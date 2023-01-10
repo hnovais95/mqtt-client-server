@@ -1,13 +1,15 @@
-﻿using DataAccess;
+﻿using Server.Infra.Db;
+using Server.Data;
+using Server.Presentation;
 
-namespace Server
+namespace Server.Main
 {
     class CustomersControllerFactory
     {
         public static CustomersController MakeController(IServerNotificationCenter notificationCenter)
         {
-            var customerDao = new CustomerDao();
-            var customerService = new CustomerService(customerDao);
+            var customerRepository = new CustomerRepository();
+            var customerService = new CustomerService(customerRepository);
             return new CustomersController(notificationCenter, customerService);
         }
     }

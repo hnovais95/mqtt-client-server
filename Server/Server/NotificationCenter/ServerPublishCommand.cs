@@ -2,6 +2,7 @@
 {
     enum ServerPublishCommand
     {
-        SendCustomers
+        GetCustomersResponse,
+        AddCustomerResponse,
     }
 }

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Data;
 using System.Collections.Generic;
-using Dommel;
+using Dapper.Contrib.Extensions;
 using DataAccess.Entities;
 
 namespace DataAccess

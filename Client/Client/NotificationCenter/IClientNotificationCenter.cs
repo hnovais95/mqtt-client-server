@@ -1,4 +1,5 @@
 ﻿using Mqtt;
+using Common.Models;
 
 namespace Client
 {
@@ -10,6 +11,6 @@ namespace Client
         public event DelOnReceiveCustomers OnReceiveCustomers;
 
         public void Publish(ClientPublishCommand command, object body);
-        public T PublishAndWaitCallback<T>(ClientPublishCommand command, object body, int timeout) where T : class;
+        public RequestResult PublishAndWaitCallback(ClientPublishCommand command, object body, int timeout);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Common.Models
 {
-    public class CustomerModel: Model
+    public class CustomerDTO
     {
         public string CustomerID { get; set; }
         public string CompanyName { get; set; }

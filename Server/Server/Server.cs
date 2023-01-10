@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mqtt;
-using DataAccess;
+using Server.Presentation;
+using Server.Infra.Db;
+using Server.Main;
 
 namespace Server
 {
     class Server
     {
         private static IMqttClientService s_mqttClient;
-        private static List<object> s_controllers = new();
+        private static readonly List<object> s_controllers = new();
 
         public static IServerNotificationCenter NotificationCenter { get; private set; }
 
@@ -64,17 +63,12 @@ namespace Server
                 {
                     if (attribute is Subscribe sub)
                     {
-                        SubscribeTopics(sub.GetTopics());
+                        foreach (string topic in sub.GetTopics())
+                        {
+                            s_mqttClient.Subscribe(topic);
+                        }
                     }
                 }
-            }
-        }
-
-        private static void SubscribeTopics(string[] topics)
-        {
-            foreach (string topic in topics)
-            {
-                s_mqttClient.Subscribe(topic);
             }
         }
     }
