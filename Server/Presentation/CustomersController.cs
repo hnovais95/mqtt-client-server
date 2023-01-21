@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -15,9 +14,9 @@ namespace Server.Presentation
         private readonly IServerNotificationCenter _notificationCenter;
         private readonly ICustomerService _customerService;
 
-        public CustomersController(IServerNotificationCenter notifcationCenter, ICustomerService customerService)
+        public CustomersController(IServerNotificationCenter notificationCenter, ICustomerService customerService)
         {
-            _notificationCenter = notifcationCenter;
+            _notificationCenter = notificationCenter;
             _notificationCenter.OnRequestCustomers += NotificationCenter_OnRequestCustomers;
             _notificationCenter.OnAddCustomer += NotificationCenter_OnAddCustomer;
             _customerService = customerService;
@@ -58,7 +57,7 @@ namespace Server.Presentation
                 {
                     try
                     {
-                        _notificationCenter.Publish(ServerPublishCommand.GetCustomersResponse, result, mqttMessage.GetID());
+                        _notificationCenter.Publish(ServerCommand.GetCustomersResponse, result, mqttMessage.GetID());
                     }
                     catch (Exception e)
                     {
@@ -95,6 +94,7 @@ namespace Server.Presentation
                     _customerService.AddCustomer(customer);
                     result.ResultCode = RequestResultCode.Success;
                     result.Message = "Cliente adicionado com sucesso.";
+                    Console.WriteLine($"Cliente adicionado com sucesso. ID do Cliente: {customer.CustomerID}");
                 }
                 catch (Exception e)
                 {
@@ -106,7 +106,7 @@ namespace Server.Presentation
                 {
                     try
                     {
-                        _notificationCenter.Publish(ServerPublishCommand.AddCustomerResponse, result, mqttMessage.GetID());
+                        _notificationCenter.Publish(ServerCommand.AddCustomerResponse, result, mqttMessage.GetID());
                     }
                     catch (Exception e)
                     {

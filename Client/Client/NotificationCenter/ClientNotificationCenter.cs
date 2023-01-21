@@ -34,30 +34,27 @@ namespace Client
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
-            if (RegexEvaluator.Evaluate(ClientNotificationName.GetCustomerResponse.Value, message.Topic))
-            {
+            if (ClientNotificationName.GetCustomerResponse.MatchWith(message.Topic))
                 OnReceiveCustomers?.Invoke(message);
-                return;
-            }
         }
 
-        public void Publish(ClientPublishCommand command, object body) {
+        public void Publish(ClientCommand command, object body) {
             throw new NotImplementedException();
         }
 
-        public RequestResult PublishAndWaitCallback(ClientPublishCommand command, object body, int timeout)
+        public RequestResult PublishAndWaitCallback(ClientCommand command, object body, int timeout)
         {
             string topic;
 
             switch (command)
             {
-                case ClientPublishCommand.GetCustomers:
+                case ClientCommand.GetCustomers:
                     topic = $"sys/client/{_mqttClient.ClientId}/customers/get/{Guid.NewGuid()}";
                     break;
-                case ClientPublishCommand.AddCustomer:
+                case ClientCommand.AddCustomer:
                     topic = $"sys/client/{_mqttClient.ClientId}/customers/add/{Guid.NewGuid()}";
                     break;
-                case ClientPublishCommand.HealthCheck:
+                case ClientCommand.HealthCheck:
                     topic = $"sys/client/{_mqttClient.ClientId}/status/{Guid.NewGuid()}";
                     break;
                 default:

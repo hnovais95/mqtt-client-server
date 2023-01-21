@@ -1,6 +1,6 @@
 ﻿namespace Client
 {
-    enum ClientPublishCommand
+    enum ClientCommand
     {
         GetCustomers,
         AddCustomer,

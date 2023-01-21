@@ -36,7 +36,7 @@ namespace Client
             {
                 try
                 {
-                    var result = Client.NotificationCenter.PublishAndWaitCallback(ClientPublishCommand.GetCustomers, null, 5000);
+                    var result = Client.NotificationCenter.PublishAndWaitCallback(ClientCommand.GetCustomers, null, 5000);
 
                     if (result.ResultCode == RequestResultCode.Success)
                     {

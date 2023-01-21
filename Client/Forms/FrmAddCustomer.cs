@@ -46,12 +46,13 @@ namespace Client
                         Fax = txtFax.Text,
                     };
 
-                    var result = Client.NotificationCenter.PublishAndWaitCallback(ClientPublishCommand.AddCustomer, customer, 5000);
+                    var result = Client.NotificationCenter.PublishAndWaitCallback(ClientCommand.AddCustomer, customer, 5000);
 
                     if (result.ResultCode == RequestResultCode.Success)
                     {
                         Invoke((MethodInvoker)delegate
                         {
+                            MessageBox.Show("Cliente adicionado com sucesso!", "Adicionar cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Close();
                         });
                     }
@@ -65,7 +66,7 @@ namespace Client
                     Invoke((MethodInvoker)delegate
                     {
                         Console.WriteLine($"Erro ao adicionar cliente. Exc.: {e}");
-                        MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Erro ao adicionar cliente: {e.Message}", "Adicionar cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
             });

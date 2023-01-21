@@ -1,6 +1,6 @@
 ﻿namespace Server
 {
-    enum ServerPublishCommand
+    enum ServerCommand
     {
         GetCustomersResponse,
         AddCustomerResponse

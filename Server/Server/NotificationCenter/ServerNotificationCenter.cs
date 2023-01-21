@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using Mqtt;
-using Common;
 using Common.Models;
 
 namespace Server
 {
     class ServerNotificationCenter: IServerNotificationCenter
     {
+        #region -- E V E N T S
+
+        public event DelOnRequestStatus OnRequestStatus;
         public event DelOnRequestCustomers OnRequestCustomers;
         public event DelOnAddCustomer OnAddCustomer;
+
+        #endregion
 
         private readonly IMqttClientService _mqttClient;
 
@@ -28,42 +30,26 @@ namespace Server
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
-            if (RegexEvaluator.Evaluate(ServerNotificationName.GetCustomers.Value, message.Topic))
-            {
+            if (ServerNotificationName.GetCustomers.MatchWith(message.Topic))
                 OnRequestCustomers?.Invoke(message);
-                return;
-            }
 
-            if (RegexEvaluator.Evaluate(ServerNotificationName.AddCustomer.Value, message.Topic))
-            {
+            if (ServerNotificationName.AddCustomer.MatchWith(message.Topic))
                 OnAddCustomer?.Invoke(message);
-                return;
-            }
 
-            if (RegexEvaluator.Evaluate(ServerNotificationName.GetStatus.Value, message.Topic))
-            {
-                var topic = $"sys/server/{_mqttClient.ClientId}/status/callback/{message.GetID()}";
-                var result = new RequestResult()
-                {
-                    ResultCode = RequestResultCode.Success,
-                    Message = "Healthy"
-                };
-                var callbackMessage = new MqttMessage(topic, result);
-                _mqttClient.Publish(callbackMessage);
-                return;
-            }
+            if (ServerNotificationName.GetStatus.MatchWith(message.Topic))
+                OnRequestStatus.Invoke(message);
         }
 
-        public void Publish(ServerPublishCommand command, object body, string callbackId)
+        public void Publish(ServerCommand command, object body, string callbackId)
         {
             string topic;
 
             switch (command)
             {
-                case ServerPublishCommand.GetCustomersResponse:
+                case ServerCommand.GetCustomersResponse:
                     topic = $"sys/server/{_mqttClient.ClientId}/customers/get/callback/{callbackId}";
                     break;
-                case ServerPublishCommand.AddCustomerResponse:
+                case ServerCommand.AddCustomerResponse:
                     topic = $"sys/server/{_mqttClient.ClientId}/customers/add/callback/{callbackId}";
                     break;
                 default:
@@ -74,7 +60,7 @@ namespace Server
             _mqttClient.Publish(message);
         }
 
-        public RequestResult PublishAndWaitCallback(ServerPublishCommand command, object body, int timeout)
+        public RequestResult PublishAndWaitCallback(ServerCommand command, object body, int timeout)
         {
             throw new NotImplementedException();
         }

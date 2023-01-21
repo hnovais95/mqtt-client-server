@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using Mqtt;
 using Server.Presentation;
 using Server.Infra.Db;
 using Server.Main;
+using Mqtt;
+using Common.Models;
 
 namespace Server
 {
@@ -23,6 +23,7 @@ namespace Server
             s_mqttClient.OnConnect += MqttClient_OnConnect;
             s_mqttClient.OnDisconnect += MqttClient_OnDisconnect;
             NotificationCenter = new ServerNotificationCenter(mqttClient);
+            NotificationCenter.OnRequestStatus += NotificationCenter_OnRequestStatus;
             RegisterMapping.Register();
         }
 
@@ -37,7 +38,7 @@ namespace Server
         {
             s_mqttClient.OnDisconnect -= MqttClient_OnDisconnect;
             s_mqttClient.Disconnect();
-            Console.WriteLine($"Erro inesperado por exceção sem tratamento. Terminating: {e.IsTerminating} Exceção: {(Exception)e.ExceptionObject}.");
+            Console.WriteLine($"Erro inesperado por exceção sem tratamento. Terminating: {e.IsTerminating} Exc: {(Exception)e.ExceptionObject}.");
         }
 
         private static void MqttClient_OnConnect()
@@ -50,6 +51,22 @@ namespace Server
         {
             Console.WriteLine("Tentando reconectar ao broker MQTT...");
             s_mqttClient.Connect();
+        }
+
+        private static void NotificationCenter_OnRequestStatus(MqttMessage message)
+        {
+            Task.Run(() =>
+            {
+                var topic = $"sys/server/{s_mqttClient.ClientId}/status/callback/{message.GetID()}";
+                var result = new RequestResult()
+                {
+                    ResultCode = RequestResultCode.Success,
+                    Message = "Healthy"
+                };
+                var callbackMessage = new MqttMessage(topic, result);
+                s_mqttClient.Publish(callbackMessage);
+                return;
+            });
         }
 
         private static void RegisterControllers()

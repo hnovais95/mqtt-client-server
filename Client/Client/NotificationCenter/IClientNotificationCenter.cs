@@ -10,7 +10,7 @@ namespace Client
     {
         public event DelOnReceiveCustomers OnReceiveCustomers;
 
-        public void Publish(ClientPublishCommand command, object body);
-        public RequestResult PublishAndWaitCallback(ClientPublishCommand command, object body, int timeout);
+        public void Publish(ClientCommand command, object body);
+        public RequestResult PublishAndWaitCallback(ClientCommand command, object body, int timeout);
     }
 }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Common;
 
 namespace Client
 {
-    sealed class ClientNotificationName : IEquatable<ClientNotificationName>
+    sealed class ClientNotificationName
     {
         public static ClientNotificationName GetCustomerResponse => new(@"^sys/client/[-\w]+/customers/get/callback/[-\w]+$");
 
@@ -13,9 +13,9 @@ namespace Client
             Value = value;
         }
 
-        public bool Equals(ClientNotificationName other)
+        public bool MatchWith(string topic)
         {
-            return (other != null) && (Value == other.Value);
+            return RegexEvaluator.Evaluate(Value, topic);
         }
 
         public override string ToString()
