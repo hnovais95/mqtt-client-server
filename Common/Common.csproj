@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet" Version="3.1.0" />
+    <Folder Include="Utilities\" />
   </ItemGroup>
 
 </Project>
