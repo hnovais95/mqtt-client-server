@@ -54,7 +54,7 @@ namespace Server
 
         private static void RegisterControllers()
         {
-            s_controllers.Add(CustomersControllerFactory.MakeController(NotificationCenter));
+            s_controllers.Add(CustomersControllerFactory.CreateController(NotificationCenter));
 
             foreach (var controller in s_controllers)
             {

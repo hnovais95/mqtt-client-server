@@ -7,7 +7,7 @@ namespace Client
 {
     partial class Client
     {
-        private static readonly Dictionary<Type, Form> t_screens = new();
+        private static readonly Dictionary<Type, Form> s_screens = new();
 
         public class Screen<T> where T : Form
         {
@@ -17,9 +17,9 @@ namespace Client
                 {
                     try
                     {
-                        if (t_screens.ContainsKey(typeof(T)))
+                        if (s_screens.ContainsKey(typeof(T)))
                         {
-                            return (T)Convert.ChangeType(t_screens[typeof(T)], typeof(T));
+                            return (T)Convert.ChangeType(s_screens[typeof(T)], typeof(T));
                         }
                         return null;
                     }
@@ -32,7 +32,7 @@ namespace Client
                 {
                     try
                     {
-                        t_screens[typeof(T)] = value;
+                        s_screens[typeof(T)] = value;
                     }
                     catch (Exception e)
                     {
@@ -75,14 +75,14 @@ namespace Client
                 {
                     try
                     {
-                        if (!t_screens.ContainsKey(type) ||
-                            t_screens[type] == null ||
-                            t_screens[type].IsDisposed)
+                        if (!s_screens.ContainsKey(type) ||
+                            s_screens[type] == null ||
+                            s_screens[type].IsDisposed)
                         {
-                            t_screens[type] = (Form)Activator.CreateInstance(type);
+                            s_screens[type] = (Form)Activator.CreateInstance(type);
                         }
 
-                        Form screen = t_screens[type];
+                        Form screen = s_screens[type];
 
                         if (screen.Visible)
                         {
@@ -122,10 +122,10 @@ namespace Client
                 {
                     try
                     {
-                        if (t_screens.ContainsKey(typeof(T)) && (t_screens[typeof(T)] != null))
+                        if (s_screens.ContainsKey(typeof(T)) && (s_screens[typeof(T)] != null))
                         {
-                            t_screens[typeof(T)].Close();
-                            t_screens.Remove(typeof(T));
+                            s_screens[typeof(T)].Close();
+                            s_screens.Remove(typeof(T));
                         }
                     }
                     catch (Exception e)
@@ -150,11 +150,11 @@ namespace Client
                 {
                     try
                     {
-                        if (t_screens.ContainsKey(typeof(T)) && (t_screens[typeof(T)] != null))
+                        if (s_screens.ContainsKey(typeof(T)) && (s_screens[typeof(T)] != null))
                         {
-                            if (t_screens[typeof(T)].Visible)
+                            if (s_screens[typeof(T)].Visible)
                             {
-                                t_screens[typeof(T)].Hide();
+                                s_screens[typeof(T)].Hide();
                             }
                         }
                     }
@@ -183,9 +183,9 @@ namespace Client
             {
                 try
                 {
-                    if (!t_screens.ContainsKey(type) || (t_screens[type] == null))
+                    if (!s_screens.ContainsKey(type) || (s_screens[type] == null))
                     {
-                        t_screens[type] = (Form)Activator.CreateInstance(type);
+                        s_screens[type] = (Form)Activator.CreateInstance(type);
                     }
 
                     Type[] paramTypes = new Type[parameters.Length];
@@ -198,7 +198,7 @@ namespace Client
 
                     if (method != null)
                     {
-                        method.Invoke(t_screens[type], parameters);
+                        method.Invoke(s_screens[type], parameters);
                     }
                     else
                     {

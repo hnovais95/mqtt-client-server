@@ -31,8 +31,10 @@ namespace Server.Infra.Db
                 throw new ArgumentNullException("value");
             }
 
-            var param = new NpgsqlParameter(name, value);
-            param.DbType = dbType;
+            var param = new NpgsqlParameter(name, value)
+            {
+                DbType = dbType
+            };
             return param;
         }
     }
