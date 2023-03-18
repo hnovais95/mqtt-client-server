@@ -1,14 +1,15 @@
 ﻿using Common;
 
-namespace Client
+namespace USBDriver
 {
-    sealed class ClientNotificationName
+    sealed class USBDriverNotification
     {
-        public static ClientNotificationName GetCustomerResponse => new(@"^sys/client/[-\w]+/customers/get/callback/[-\w]+$");
+        public static USBDriverNotification SendDataTransparent => new(@"^sys/server/[-\w]+/usb/send-transparent/[-\w]+$");
+        public static USBDriverNotification SendData => new(@"^sys/server/[-\w]+/usb/send/[-\w]+$");
 
         public string Value { get; private set; }
 
-        private ClientNotificationName(string value)
+        private USBDriverNotification(string value)
         {
             Value = value;
         }

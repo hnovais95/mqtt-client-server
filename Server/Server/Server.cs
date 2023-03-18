@@ -14,7 +14,7 @@ namespace Server
         private static IMqttClientService s_mqttClient;
         private static readonly List<object> s_controllers = new();
 
-        public static IServerNotificationCenter NotificationCenter { get; private set; }
+        public static ServerNotificationCenter NotificationCenter { get; private set; }
 
         public static void Configure(IMqttClientService mqttClient)
         {

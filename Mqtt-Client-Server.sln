@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{7CB90B2E-777F-4E3B-8DE9-84D00D5CD3E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBDriver", "USBDriver\USBDriver.csproj", "{F970C8AB-C09E-4E0F-9AA6-B68539650135}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{7CB90B2E-777F-4E3B-8DE9-84D00D5CD3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CB90B2E-777F-4E3B-8DE9-84D00D5CD3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB90B2E-777F-4E3B-8DE9-84D00D5CD3E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F970C8AB-C09E-4E0F-9AA6-B68539650135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F970C8AB-C09E-4E0F-9AA6-B68539650135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F970C8AB-C09E-4E0F-9AA6-B68539650135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F970C8AB-C09E-4E0F-9AA6-B68539650135}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

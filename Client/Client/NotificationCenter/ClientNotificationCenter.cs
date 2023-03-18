@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using Mqtt;
-using Common;
 using Common.Models;
 
 namespace Client
 {
-    class ClientNotificationCenter: IClientNotificationCenter
+    class ClientNotificationCenter
     {
+        #region -- D E L E G A T E S
+
+        public delegate void DelOnReceiveCustomers(MqttMessage message);
+
+        #endregion
 
         #region -- E V E N T S
 
@@ -34,7 +37,7 @@ namespace Client
 
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
-            if (ClientNotificationName.GetCustomerResponse.MatchWith(message.Topic))
+            if (ClientNotification.GetCustomerResponse.MatchWith(message.Topic))
                 OnReceiveCustomers?.Invoke(message);
         }
 

@@ -1,14 +1,14 @@
 ﻿using Mqtt;
 
-namespace Server
+namespace USBDriver
 {
     class Program
     {
         static void Main(string[] args)
         {
             var mqttClient = new MqttClient("test.mosquitto.org", 1883);
-            Server.Configure(mqttClient);
-            Server.Start();
+            USBDriver.Configure(mqttClient);
+            USBDriver.Start();
         }
     }
 }

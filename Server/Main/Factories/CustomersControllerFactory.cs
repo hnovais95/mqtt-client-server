@@ -6,7 +6,7 @@ namespace Server.Main
 {
     class CustomersControllerFactory
     {
-        public static CustomersController CreateController(IServerNotificationCenter notificationCenter)
+        public static CustomersController CreateController(ServerNotificationCenter notificationCenter)
         {
             var customerRepository = new CustomerRepository();
             var customerService = new CustomerService(customerRepository);

@@ -14,7 +14,7 @@ namespace Client
         private static IMqttClientService s_mqttClient;
         private static readonly Timer t_timer = new();
 
-        public static IClientNotificationCenter NotificationCenter { get; private set; }
+        public static ClientNotificationCenter NotificationCenter { get; private set; }
         public static bool HealthStatus { get; private set; }
 
         public static void Configure(IMqttClientService mqttClient)

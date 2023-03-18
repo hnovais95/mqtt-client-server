@@ -11,10 +11,10 @@ namespace Server.Presentation
     [Subscribe("sys/client/+/customers/get/+"), Subscribe("sys/client/+/customers/add/+")]
     class CustomersController
     {
-        private readonly IServerNotificationCenter _notificationCenter;
+        private readonly ServerNotificationCenter _notificationCenter;
         private readonly ICustomerService _customerService;
 
-        public CustomersController(IServerNotificationCenter notificationCenter, ICustomerService customerService)
+        public CustomersController(ServerNotificationCenter notificationCenter, ICustomerService customerService)
         {
             _notificationCenter = notificationCenter;
             _notificationCenter.OnRequestCustomers += NotificationCenter_OnRequestCustomers;

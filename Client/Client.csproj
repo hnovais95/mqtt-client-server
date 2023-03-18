@@ -2,15 +2,22 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Mqtt\Mqtt.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\Mqtt\Mqtt.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Client\NotificationCenter\IClientNotificationCenter.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Update="Client\Client.Screen.cs">
       <DependentUpon>Client.cs</DependentUpon>

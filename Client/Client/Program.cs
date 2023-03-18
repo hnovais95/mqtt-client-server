@@ -16,7 +16,7 @@ namespace Client
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var mqttClient = new MqttClient("127.0.0.1", 1883);
+            var mqttClient = new MqttClient("test.mosquitto.org", 1883);
             Client.Configure(mqttClient);
             Client.Start();
         }
