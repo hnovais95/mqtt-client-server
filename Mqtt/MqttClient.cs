@@ -33,6 +33,7 @@ namespace Mqtt
                 .WithClientId(Guid.NewGuid().ToString())
                 .WithTcpServer(server, port)
                 .WithCleanSession()
+                .WithTls()
                 .Build();
 
             RegisterCallbacks();
