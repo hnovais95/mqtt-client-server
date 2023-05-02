@@ -14,7 +14,7 @@ namespace Server
         private static IMqttClientService s_mqttClient;
         private static readonly List<object> s_controllers = new();
 
-        public static IServerNotificationCenter NotificationCenter { get; private set; }
+        public static NotificationCenter NotificationCenter { get; private set; }
 
         public static void Configure(IMqttClientService mqttClient)
         {
@@ -22,7 +22,7 @@ namespace Server
             s_mqttClient = mqttClient;
             s_mqttClient.OnConnect += MqttClient_OnConnect;
             s_mqttClient.OnDisconnect += MqttClient_OnDisconnect;
-            NotificationCenter = new ServerNotificationCenter(mqttClient);
+            NotificationCenter = new NotificationCenter(mqttClient);
             NotificationCenter.OnRequestStatus += NotificationCenter_OnRequestStatus;
             RegisterMapping.Register();
         }
@@ -71,7 +71,7 @@ namespace Server
 
         private static void RegisterControllers()
         {
-            s_controllers.Add(CustomersControllerFactory.CreateController(NotificationCenter));
+            s_controllers.Add(SensorControllerFactory.CreateController(NotificationCenter));
 
             foreach (var controller in s_controllers)
             {

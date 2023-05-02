@@ -2,7 +2,7 @@
 {
     enum ServerCommand
     {
-        GetCustomersResponse,
-        AddCustomerResponse
+        GetRainMeansurementResponse,
+        GetHumidityMeansurementResponse
     }
 }

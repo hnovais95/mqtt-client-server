@@ -8,7 +8,7 @@ namespace Server.Infra.Db
     {
         public static IDbConnection CreateConnection()
         {
-            var connectionString = "Server=localhost;Database=northwind;Port=5432;User Id=postgres;Password=admin;";
+            var connectionString = "postgres://postgres:postgrespw@localhost:55000";
             var conn = new NpgsqlConnection(connectionString);
             return conn;
         }

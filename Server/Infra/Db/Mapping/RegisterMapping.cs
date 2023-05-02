@@ -9,7 +9,8 @@ namespace Server.Infra.Db
 		{
             FluentMapper.Initialize(config =>
             {
-                config.AddMap(new CustomerMap());
+                config.AddMap(new RainSensorMap());
+                config.AddMap(new HumiditySensorMap());
                 config.ForDommel();
             });
         }
