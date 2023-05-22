@@ -8,17 +8,21 @@ namespace Server
     {
         #region -- D E L E G A T E S
 
-        public delegate void DelOnRequestStatus(MqttMessage message);
-        public delegate void DelOnRequestCustomers(MqttMessage message);
+        public delegate void DelOnGetStatus(MqttMessage message);
+        public delegate void DelOnGetCustomers(MqttMessage message);
         public delegate void DelOnAddCustomer(MqttMessage message);
+        public delegate void DelOnReceiveSerialData(MqttMessage message);
+        public delegate void DelOnGetPredictions(MqttMessage message);
 
         #endregion
 
         #region -- E V E N T S
 
-        public event DelOnRequestStatus OnRequestStatus;
-        public event DelOnRequestCustomers OnRequestCustomers;
+        public event DelOnGetStatus OnGetStatus;
+        public event DelOnGetCustomers OnGetCustomers;
         public event DelOnAddCustomer OnAddCustomer;
+        public event DelOnReceiveSerialData OnReceiveSerialData;
+        public event DelOnGetPredictions OnGetPredictions;
 
         #endregion
 
@@ -40,16 +44,22 @@ namespace Server
         private void MqttClient_OnReceiveMessage(MqttMessage message)
         {
             if (ServerNotification.GetCustomers.MatchWith(message.Topic))
-                OnRequestCustomers?.Invoke(message);
+                OnGetCustomers?.Invoke(message);
 
             if (ServerNotification.AddCustomer.MatchWith(message.Topic))
                 OnAddCustomer?.Invoke(message);
 
             if (ServerNotification.GetStatus.MatchWith(message.Topic))
-                OnRequestStatus.Invoke(message);
+                OnGetStatus.Invoke(message);
 
-            if (ServerNotification.SerialData.MatchWith(message.Topic))
+            if (ServerNotification.ReceiveSerialData.MatchWith(message.Topic))
+            {
+                OnReceiveSerialData.Invoke(message);
                 Console.WriteLine($"Mensagem da porta serial recebida. Topic: {message.Topic} Payload: {message.Payload}");
+            }
+
+            if (ServerNotification.GetPredictions.MatchWith(message.Topic))
+                OnGetPredictions.Invoke(message);
         }
 
         public void Publish(ServerCommand command, object body, string callbackId)
@@ -63,6 +73,9 @@ namespace Server
                     break;
                 case ServerCommand.AddCustomerResponse:
                     topic = $"sys/server/{_mqttClient.ClientId}/customers/add/callback/{callbackId}";
+                    break;
+                case ServerCommand.GetPredictionsResponse:
+                    topic = $"sys/server/{_mqttClient.ClientId}/calibration/predictions/get/callback/{callbackId}";
                     break;
                 default:
                     return;

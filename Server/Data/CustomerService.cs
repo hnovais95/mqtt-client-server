@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Server.Infra.Db;
 using Common.Models;
 using Server.Domain;
 
@@ -8,9 +7,9 @@ namespace Server.Data
 {
     public class CustomerService: ICustomerService
     {
-        private readonly CustomerRepository _customerRepository;
+        private readonly IRepository<Customer> _customerRepository;
 
-        public CustomerService(CustomerRepository customerDao)
+        public CustomerService(IRepository<Customer> customerDao)
         {
             _customerRepository = customerDao;
         }

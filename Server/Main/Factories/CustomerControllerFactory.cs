@@ -4,13 +4,13 @@ using Server.Presentation;
 
 namespace Server.Main
 {
-    class CustomersControllerFactory
+    class CustomerControllerFactory
     {
-        public static CustomersController CreateController(ServerNotificationCenter notificationCenter)
+        public static CustomerController Create(ServerNotificationCenter notificationCenter)
         {
             var customerRepository = new CustomerRepository();
             var customerService = new CustomerService(customerRepository);
-            return new CustomersController(notificationCenter, customerService);
+            return new CustomerController(notificationCenter, customerService);
         }
     }
 }

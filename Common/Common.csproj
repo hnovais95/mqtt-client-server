@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <Folder Include="Utilities\" />
+    <Folder Include="Models\Calibration\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Models\Calibration\" />
+  </ItemGroup>
 </Project>

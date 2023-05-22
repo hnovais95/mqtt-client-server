@@ -3,6 +3,7 @@
     enum ServerCommand
     {
         GetCustomersResponse,
-        AddCustomerResponse
+        AddCustomerResponse,
+        GetPredictionsResponse
     }
 }

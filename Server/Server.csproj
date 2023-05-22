@@ -19,4 +19,14 @@
 	  <PackageReference Include="Npgsql" Version="7.0.1" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Data\Calibration\" />
+	  <None Remove="Domain\Calibration\" />
+	  <None Remove="Domain\Common\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Data\Calibration\" />
+	  <Folder Include="Domain\Calibration\" />
+	  <Folder Include="Domain\Common\" />
+	</ItemGroup>
 </Project>

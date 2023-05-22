@@ -6,6 +6,7 @@ using Server.Infra.Db;
 using Server.Main;
 using Mqtt;
 using Common.Models;
+using Server.Main.Factories;
 
 namespace Server
 {
@@ -23,7 +24,7 @@ namespace Server
             s_mqttClient.OnConnect += MqttClient_OnConnect;
             s_mqttClient.OnDisconnect += MqttClient_OnDisconnect;
             NotificationCenter = new ServerNotificationCenter(mqttClient);
-            NotificationCenter.OnRequestStatus += NotificationCenter_OnRequestStatus;
+            NotificationCenter.OnGetStatus += NotificationCenter_OnRequestStatus;
             RegisterMapping.Register();
         }
 
@@ -71,7 +72,8 @@ namespace Server
 
         private static void RegisterControllers()
         {
-            s_controllers.Add(CustomersControllerFactory.CreateController(NotificationCenter));
+            s_controllers.Add(CustomerControllerFactory.Create(NotificationCenter));
+            s_controllers.Add(CalibrationControllerFactory.Create(NotificationCenter));
 
             foreach (var controller in s_controllers)
             {

@@ -9,20 +9,20 @@ using Server.Domain;
 namespace Server.Presentation
 {
     [Subscribe("sys/client/+/customers/get/+"), Subscribe("sys/client/+/customers/add/+")]
-    class CustomersController
+    class CustomerController
     {
         private readonly ServerNotificationCenter _notificationCenter;
         private readonly ICustomerService _customerService;
 
-        public CustomersController(ServerNotificationCenter notificationCenter, ICustomerService customerService)
+        public CustomerController(ServerNotificationCenter notificationCenter, ICustomerService customerService)
         {
             _notificationCenter = notificationCenter;
-            _notificationCenter.OnRequestCustomers += NotificationCenter_OnRequestCustomers;
+            _notificationCenter.OnGetCustomers += NotificationCenter_OnGetCustomers;
             _notificationCenter.OnAddCustomer += NotificationCenter_OnAddCustomer;
             _customerService = customerService;
         }
 
-        private void NotificationCenter_OnRequestCustomers(MqttMessage mqttMessage)
+        private void NotificationCenter_OnGetCustomers(MqttMessage mqttMessage)
         {
             Task.Run(async () =>
             {
@@ -76,7 +76,7 @@ namespace Server.Presentation
                 try
                 {
                     var customerDto = JsonSerializer.Deserialize<CustomerDTO>((string)mqttMessage.Payload);
-                    var customer = new Customer() 
+                    var customer = new Customer()
                     {
                         CustomerID = customerDto.CustomerID,
                         CompanyName = customerDto.CompanyName,
