@@ -1,0 +1,6 @@
+# Ignorar o diretório do projeto "Client"
+Client/
+
+# Ignorar todos os arquivos dentro do diretório "Client"
+Client/**/*.cs
+Client/**/*.*
