@@ -24,7 +24,6 @@ namespace Server.Presentation
 
         private void NotificationCenter_OnGetPredictions(MqttMessage mqttMessage)
         {
-            Console.WriteLine($"Recebeu mensagem");
             Task.Run(async () =>
             {
                 var result = new RequestResult();
