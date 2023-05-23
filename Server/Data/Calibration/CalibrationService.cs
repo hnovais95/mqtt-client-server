@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Common.Models;
 using Server.Domain;
+using Common.Models;
 
 namespace Server.Data
 {
@@ -17,13 +17,11 @@ namespace Server.Data
 			_httpClient = httpClient;
 		}
 
-		public async Task<IEnumerable<Double>> GetPredictions(List<CalibrationParamsDTO> calibrationParams)
+		public async Task<HumidityPredictionsDTO> GetPredictions(CalibrationRecordsDTO records)
 		{
-			var requestBody = new GetPredictionsRequestDTO { Records = calibrationParams };
-            using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/invocations", requestBody);
+            using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/invocations", records);
             response.EnsureSuccessStatusCode();
-			var responseBody = await response.Content.ReadFromJsonAsync<GetPredictionsResponseDTO>();
-			return responseBody.Predictions;
+			return await response.Content.ReadFromJsonAsync<HumidityPredictionsDTO>();
         }
     }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Mqtt;
-using Common.Models;
 using Server.Domain;
+using Common.Models;
 
 namespace Server.Presentation
 {
@@ -30,8 +30,8 @@ namespace Server.Presentation
 
                 try
                 {
-                    var calibrationParams = JsonSerializer.Deserialize<List<CalibrationParamsDTO>>((string)mqttMessage.Payload);
-                    var predictions = await _calibrationService.GetPredictions(calibrationParams);
+                    var records = JsonSerializer.Deserialize<CalibrationRecordsDTO>((string)mqttMessage.Payload);
+                    var predictions = await _calibrationService.GetPredictions(records);
                     result.ResultCode = RequestResultCode.Success;
                     result.Body = predictions;
                 }
@@ -39,13 +39,13 @@ namespace Server.Presentation
                 {
                     Console.WriteLine($"Erro ao tratar requisção. Tópico: {mqttMessage.Topic}; Payload: {mqttMessage.Payload}; Exc.: {e}");
                     result.ResultCode = RequestResultCode.Failure;
-                    result.Message = "Erro obter predições de umidade.";
+                    result.Message = "Erro ao obter predições de umidade.";
                 }
                 finally
                 {
                     try
                     {
-                        _notificationCenter.Publish(ServerCommand.GetCustomersResponse, result, mqttMessage.GetID());
+                        _notificationCenter.Publish(ServerCommand.GetPredictionsResponse, result, mqttMessage.GetID());
                     }
                     catch (Exception e)
                     {

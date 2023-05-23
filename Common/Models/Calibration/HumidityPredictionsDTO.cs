@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Server.Data
+namespace Common.Models
 {
-    public class GetPredictionsResponseDTO
+    public class HumidityPredictionsDTO
     {
         [JsonPropertyName("predictions")]
         public List<Double> Predictions { get; set; }

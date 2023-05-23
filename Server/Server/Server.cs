@@ -24,7 +24,7 @@ namespace Server
             s_mqttClient.OnConnect += MqttClient_OnConnect;
             s_mqttClient.OnDisconnect += MqttClient_OnDisconnect;
             NotificationCenter = new ServerNotificationCenter(mqttClient);
-            NotificationCenter.OnGetStatus += NotificationCenter_OnRequestStatus;
+            NotificationCenter.OnGetStatus += NotificationCenter_OnGetStatus;
             RegisterMapping.Register();
         }
 
@@ -54,7 +54,7 @@ namespace Server
             s_mqttClient.Connect();
         }
 
-        private static void NotificationCenter_OnRequestStatus(MqttMessage message)
+        private static void NotificationCenter_OnGetStatus(MqttMessage message)
         {
             Task.Run(() =>
             {

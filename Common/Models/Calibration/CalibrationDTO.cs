@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Globalization;
+﻿using System.Text.Json.Serialization;
 
 namespace Common.Models
 {
-    public class CalibrationParamsDTO
+    public class CalibrationDTO
     {
         [JsonPropertyName("Er")]
         public double Er { get; set; }
